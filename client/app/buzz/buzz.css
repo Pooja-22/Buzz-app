@@ -1,0 +1,55 @@
+#postInputText {
+  height: 80px;
+  width: 90%;
+  text-align: inherit;
+}
+
+#buzzButton {
+  margin-left: 43%;
+}
+
+#creationTime {
+  font-size: x-small;
+}
+
+.row {
+  padding-top: 10px;
+}
+
+#post {
+  border: 1px solid #ddd;
+  box-shadow: 0px 0px 2px 3px rgba(12, 22, 0, 0.1);
+  margin-top: 30px;
+
+}
+
+#deleteAndEdit {
+  right: 10px;
+  position: absolute;
+
+}
+
+#postType {
+  color: #105cb6;
+  padding: 10px;
+}
+
+#creationTime {
+  color: #105cb6;
+  padding: 10px;
+}
+
+#div_postText {
+  padding: 10px;
+  border: 1px solid #269abc;
+  margin-top: 5px;
+}
+
+#div_likesDislikes {
+  margin-top: 5px;
+}
+
+.showDelete a {
+  text-decoration: none;
+}
+

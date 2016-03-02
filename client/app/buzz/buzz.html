@@ -1,0 +1,85 @@
+<div ng-init='getBuzz()'>
+  <div class="row" style="margin-left: 0px;">
+    <div class="col-md-15" style="padding-left:0px;">
+      <textarea ng-model="postText" placeholder="What's on your mind?" id="postInputText"></textarea>
+      <select name="buzzType" ng-model="buzzType" id="postSelectType">
+        <option selected disabled>Type</option>
+        <option value="Activity">Activity</option>
+        <option value="Lost N Found">Lost N Found</option>
+      </select>
+      <input type="Submit" value="Buzz" id="buzzButton" ng-click="saveBuzz()">
+    </div>
+  </div>
+  <br><br>
+  <hr>
+
+
+  <div id="post" ng-repeat="buzz in Buzz ">
+    <div style="position: relative">
+      <span id="userImage">
+        <img src="{{buzz.postedBy.google.image.url}}">
+        <span style="color: #105cb6;padding: 10px;">{{buzz.postedBy.name}}</span>Posted
+        <span id="postType">{{buzz.buzzType}}</span>On
+        <span id="creationTime">{{buzz.createdOn|date : shortDate}}</span>
+      </span>
+      <span id='deleteAndEdit' ng-if="showBtn(buzz.postedBy._id)">
+        <a href="" class="glyphicon glyphicon-trash" ng-click="deleteBuzz(buzz._id)"></a>&nbsp&nbsp
+        <a href="" class="glyphicon glyphicon-pencil" ng-click="showEditDiv(buzz._id)"></a>
+      </span>
+    </div>
+    <div id="div_postText">
+      <p id="postText">{{buzz.buzzContent}}</p>
+    </div>
+    <div id="div_likesDislikes">
+      <a href="" class="glyphicon glyphicon-thumbs-up showDelete" ng-click="countLike(buzz._id)">
+      </a>&nbsp
+      <span style="padding: 2px;;">{{likeValue}}</span>
+      <a href="" class="glyphicon glyphicon-thumbs-down showDelete" ng-click="countDislike(buzz._id)"></a>&nbsp
+      <span style="padding: 2px;;">{{buzz.dislikes}}</span>
+    </div>
+    <div ng-show='showDivObj.showDiv&&showDivObj.showDivId == buzz._id'>
+      <textarea ng-model="updatePostText">{{buzz.buzzContent}}</textarea>
+      <button ng-click="editBuzz(buzz._id,updatePostText)">Save</button>
+    </div>
+    <!--<span>{{buzz._id}}</span>-->
+    <!--<span>{{buzz.postedBy._id}}</span>-->
+
+    <br>
+  </div>
+  <br><br>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
