@@ -8,7 +8,6 @@ var controller = require('./buzz.controller');
 var auth = require('../../auth/auth.service');
 var router = express.Router();
 
-//
 router.get('/', controller.find);
 router.post('/', auth.isAuthenticated(), controller.createBuzz);
 router.delete('/:id', auth.isAuthenticated(), controller.deleteBuzz);

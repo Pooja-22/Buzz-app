@@ -3,7 +3,7 @@
  */
 'use strict';
 angular.module('buzzAppApp')
-  .controller('BuzzCtrl', ['$scope', 'buzzService', 'Auth', function ($scope, buzzService, Auth) {
+  .controller('BuzzCtrl', ['$scope', 'buzzService', 'Auth', function ($scope, buzzService, Auth, it, element) {
 
     $scope.BuzzData = {};
     $scope.updatePost = {
@@ -16,6 +16,10 @@ angular.module('buzzAppApp')
     };
     $scope.likeValue = '';
     $scope.getCurrentUserId = Auth.getCurrentUser()._id;
+    $scope.type = '';
+    $scope.postedText = '';
+    $scope.showMoreBtn = false;
+    $scope.showLessBtn = false;
 
     /***
      * Create and Save buzz
@@ -30,6 +34,27 @@ angular.module('buzzAppApp')
       buzzService.save($scope.BuzzData, function (err, data) {
         $scope.postText = '';
         $scope.getBuzz();
+      });
+    };
+
+    /**
+     * Get list of buzz
+     */
+
+    $scope.getBuzz = function () {
+      $scope.Buzz = buzzService.getBuzz();
+    };
+
+    /**
+     * Update buzz
+     * @param id
+     */
+
+    $scope.editBuzz = function (id, updatedValue) {
+      $scope.updatePost.updatePostText = updatedValue;
+      buzzService.update({buzzId: id}, $scope.updatePost, function (err, data) {
+        $scope.getBuzz();
+        $scope.showDivObj.showDiv = false;
       });
     };
 
@@ -51,19 +76,6 @@ angular.module('buzzAppApp')
     };
 
     /**
-     * Update buzz
-     * @param id
-     */
-
-    $scope.editBuzz = function (id, updatedValue) {
-      $scope.updatePost.updatePostText = updatedValue;
-      buzzService.update({buzzId: id}, $scope.updatePost, function (err, data) {
-        $scope.getBuzz();
-        $scope.showDivObj.showDiv = false;
-      });
-    };
-
-    /**
      * Delete buzz only by owner of buzz
      * @param id
      */
@@ -72,14 +84,6 @@ angular.module('buzzAppApp')
       buzzService.delete({buzzId: id}, function (err, data) {
         $scope.getBuzz();
       });
-    };
-
-    /**
-     * Get list of buzz
-     */
-
-    $scope.getBuzz = function () {
-      $scope.Buzz = buzzService.getBuzz();
     };
 
     /**
@@ -98,18 +102,11 @@ angular.module('buzzAppApp')
      */
 
     $scope.countLike = function (id) {
-      //if (Auth.getCurrentUser()._id == likeById) {
-      //
-      //}
-      $scope.likeValue = 0;
-      $scope.likeValue = $scope.likeValue + 1;
-      $scope.saveLike = function () {
-        $scope.updatePost.likedByUserId = $scope.getCurrentUserId;
-        buzzService.update({buzzId: id}, $scope.updatePost, function (err, data) {
-          $scope.getBuzz();
-        });
-      };
-      $scope.saveLike();
+      $scope.updatePost.type = 'like';
+      $scope.updatePost.UserId = $scope.getCurrentUserId;
+      buzzService.update({buzzId: id}, $scope.updatePost, function (err, data) {
+      });
+      $scope.getBuzz();
     };
 
     /**
@@ -118,16 +115,64 @@ angular.module('buzzAppApp')
      */
 
     $scope.countDislike = function (id) {
-      $scope.dislikeValue = 0;
-      $scope.dislikeValue = $scope.likeValue + 1;
-      $scope.saveDislike = function () {
-        $scope.updatePost.dislikedByUserId = $scope.getCurrentUserId;
-        buzzService.update({buzzId: id}, $scope.updatePost, function (err, data) {
-          $scope.getBuzz();
-        });
-      };
-      $scope.saveDislike();
+      $scope.updatePost.type = 'dislike';
+      $scope.updatePost.UserId = $scope.getCurrentUserId;
+      buzzService.update({buzzId: id}, $scope.updatePost, function (err, data) {
+      });
+      $scope.getBuzz();
     };
+
+    /**
+     * See more and less functionality
+     */
+
+    //$scope.buzzContentLimit = function (BuzzContent) {
+    //  $scope.count = BuzzContent.length;
+    //  if ($scope.count > 900) {
+    //    $scope.showMoreBtn = true;
+    //    return BuzzContent.slice(0, 700);
+    //  }
+    //  else {
+    //    $scope.showMoreBtn =false;
+    //    return BuzzContent ;
+    //  }
+    //};
+    //
+    //$scope.showWholeContent = function(BuzzContent){
+    //  $scope.showLessBtn = true;
+    //  $scope.showMoreBtn = false;
+    //  return BuzzContent;
+    //};
+    //
+    //$scope.showLessContent = function(BuzzContent){
+    //  $scope.showLessBtn = false;
+    //  $scope.showMoreBtn = true;
+    //  return BuzzContent.slice(0, 900);
+    //}
 
   }])
 ;
+
+
+//$scope.buzzContentLimit = function (BuzzContent) {
+//  $scope.content = BuzzContent;
+//  $scope.count = BuzzContent.length;
+//  if ($scope.count > 10) {
+//    $scope.showMoreBtn = true;
+//    return BuzzContent.slice(0, 3);
+//  }
+//  else {
+//    $scope.showMoreBtn = false;
+//    return BuzzContent;
+//  }
+//  $scope.showWholeContent = function () {
+//    $scope.showLessBtn = true;
+//    $scope.showMoreBtn = false;
+//    $scope.buzzContentLimit();
+//  }
+//  $scope.showLessContent = function () {
+//    $scope.showLessBtn = false;
+//    $scope.showMoreBtn = true;
+//    $scope.buzzContentLimit();
+//  }
+//};

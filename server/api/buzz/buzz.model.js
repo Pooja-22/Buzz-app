@@ -7,7 +7,7 @@ var Schema = mongoose.Schema;
 
 var BuzzSchema = new Schema({
   buzzContent: {type: String, required: true},   //buzz content
- // updatedPostText: {type: String}, // Edited Buzz content
+  // updatedPostText: {type: String}, // Edited Buzz content
   createdOn: {type: Date}, //Posted time
   buzzType: {type: String, default: 'Activity'},  //Buzz type
   postedBy: {
@@ -18,7 +18,7 @@ var BuzzSchema = new Schema({
     postedBy: {
       type: mongoose.Schema.Types.ObjectId, //Reference of user who liked buzz
       ref: 'User',
-      unique:true
+      unique: true
     }
 
   }],
@@ -26,9 +26,15 @@ var BuzzSchema = new Schema({
     postedBy: {
       type: mongoose.Schema.Types.ObjectId, //Reference of user who liked buzz
       ref: 'User',
-      unique:true
+      unique: true
     }
-  }]
+  }],
+
+  likeFlag: {type: Boolean, default:false},
+
+  dislikeFlag: {type: Boolean, default:false}
+
+
 });
 
 module.exports = mongoose.model('Buzz', BuzzSchema);

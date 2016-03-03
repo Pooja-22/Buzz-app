@@ -54,7 +54,6 @@ exports.deleteBuzz = function (id, callback) {
  */
 
 exports.editBuzz = function (id, updatedBuzz, callback) {
-  console.log(updatedBuzz);
   Buzz.findById(id, function (err, buzz) {
     if (err) {
       callback(err);
@@ -63,34 +62,54 @@ exports.editBuzz = function (id, updatedBuzz, callback) {
       if (updatedBuzz.updatePostText) {
         buzz.buzzContent = updatedBuzz.updatePostText;
       }
-      console.log("pppoja",updatedBuzz.dislikedByUserId,buzz.dislikedBy )
-      console.log((_.findIndex(buzz.dislikedBy, {postedBy: updatedBuzz.dislikedByUserId})),'AASDFGBFDVCSXA')
-        if(updatedBuzz.dislikedByUserId &&( _.findIndex(buzz.dislikedBy, {postedBy: updatedBuzz.dislikedByUserId}) === -1)){
-          buzz.dislikedBy.push({
-            postedBy: updatedBuzz.dislikedByUserId
-          })
+
+      var likeIndex = _.findIndex(buzz.likedBy, function (Obj) {
+        return Obj.postedBy == updatedBuzz.UserId
+      });
+      var dislikeIndex = _.findIndex(buzz.dislikedBy, function (Obj) {
+        return Obj.postedBy == updatedBuzz.UserId
+      });
+
+      function like() {
+
+        if (likeIndex === -1) {
+          buzz.likedBy.push({
+            postedBy: updatedBuzz.UserId
+          });
+          buzz.likeFlag = true;
         }
-      //if (updatedBuzz.likedByUserId && buzz.likedBy.length > 0) {
-      //  buzz.likedBy.forEach(function (obj) {
-      //    if (updatedBuzz.likedByUserId != obj.postedBy) {
-      //      buzz.likedBy.push({
-      //        postedBy: updatedBuzz.likedByUserId
-      //      });
-      //    }
-      //  });
-      //}
-      //else if(updatedBuzz.likedByUserId){
-      //  buzz.likedBy.push({
-      //    postedBy: updatedBuzz.likedByUserId
-      //  })
-      //}
-      //buzz.dislikedBy.forEach(function (obj) {
-      //  if (updatedBuzz.dislikedByUserId != obj.postedBy) {
-      //    buzz.dislikedBy.push({
-      //      postedBy: updatedBuzz.dislikedByUserId
-      //    });
-      //  }
-      //});
+
+        if (dislikeIndex != -1) {
+          buzz.dislikedBy.splice(dislikeIndex, 1);
+        }
+        buzz.dislikeFlag = false;
+
+      }
+
+      function dislike() {
+        if (dislikeIndex === -1) {
+          buzz.dislikedBy.push({
+            postedBy: updatedBuzz.UserId
+          });
+          buzz.dislikeFlag = true;
+        }
+
+        if (likeIndex != -1) {
+          buzz.likedBy.splice(likeIndex, 1);
+          buzz.likeFlag = false;
+        }
+      }
+
+      switch (updatedBuzz.type) {
+
+        case 'like' :
+          like();
+          break;
+
+        case 'dislike' :
+          dislike();
+          break;
+      }
     }
 
     buzz.save(function (err, data) {

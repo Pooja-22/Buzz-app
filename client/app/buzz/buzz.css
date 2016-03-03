@@ -31,12 +31,13 @@
 
 #postType {
   color: #105cb6;
-  padding: 10px;
+  padding: 8px;
+  padding-bottom: 0px;
 }
 
 #creationTime {
   color: #105cb6;
-  padding: 10px;
+  font-size: small;
 }
 
 #div_postText {
@@ -49,7 +50,6 @@
   margin-top: 5px;
 }
 
-.showDelete a {
-  text-decoration: none;
+.likeDislikeChangeColor{
+  background: #9acfea;
 }
-
