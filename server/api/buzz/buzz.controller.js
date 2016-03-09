@@ -1,6 +1,7 @@
 /**
  * Created by pooja on 29/2/16.
  */
+
 'use strict';
 
 var BuzzService = require('./buzz.service');
@@ -11,8 +12,10 @@ var BuzzService = require('./buzz.service');
  * @param res
  */
 
-exports.find = function (req, res) {
-  BuzzService.find(function (err, buzz) {
+exports.findBuzz = function (req, res) {
+  var page = req.query.page;
+  var perPage = req.query.perPage;
+  BuzzService.find(page, perPage, function (err, buzz) {
     if (err) {
       return HandleError(res, err);
     }
@@ -30,7 +33,7 @@ exports.find = function (req, res) {
 
 exports.createBuzz = function (req, res) {
   var userId = req.user._id;
-  BuzzService.createBuzz(userId, req.body, function (err, buzz) {
+  BuzzService.createBuzz(userId, req.body, req.file, function (err, buzz) {
     if (err) {
       return HandleError(res, err);
     }
@@ -48,7 +51,8 @@ exports.createBuzz = function (req, res) {
 
 exports.deleteBuzz = function (req, res) {
   var id = req.params.id;
-  BuzzService.deleteBuzz(id, function (err, buzz) {
+  var commentId = req.params.commentId;
+  BuzzService.deleteBuzz(id, commentId, function (err, buzz) {
     if (err) {
       return HandleError(res, err);
     }
@@ -66,7 +70,8 @@ exports.deleteBuzz = function (req, res) {
 
 exports.editBuzz = function (req, res) {
   var id = req.params.id;
-  BuzzService.editBuzz(id, req.body, function (err, buzz) {
+  var commentId = req.params.commentId;
+  BuzzService.editBuzz(id, commentId, req.body, function (err, buzz) {
     if (err) {
       return HandleError(res, err);
     }

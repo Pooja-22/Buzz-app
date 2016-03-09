@@ -1,15 +1,20 @@
 /**
  * Created by pooja on 29/2/16.
  */
+
 var Buzz = require('./buzz.model');
 var _ = require('lodash');
+var Cloudinary = require('../../components/cloudinary/cloudinary');
+var fs = require('fs');
+
 
 /**
  *Get list of all buzz
  * @param callback
  */
-exports.find = function (callback) {
-  Buzz.find({}).sort({createdOn: -1}).populate('postedBy').populate('likeBy').exec(function (err, buzz) {
+
+exports.find = function (page, perPage, callback) {
+  Buzz.find({}).skip(page * perPage).limit(perPage).sort({createdOn: -1}).populate('postedBy').populate('comments.postedBy').populate('likedBy.postedBy').populate('dislikedBy.postedBy').exec(function (err, buzz) {
     callback(err, buzz);
   })
 };
@@ -20,11 +25,29 @@ exports.find = function (callback) {
  * @param callback
  */
 
-exports.createBuzz = function (id, data, callback) {
-  data.postedBy = id;
-  Buzz.create(data, function (err, buzz) {
-    callback(err, buzz);
-  })
+exports.createBuzz = function (id, data, fileDetail, callback) {
+  if (!fileDetail) {
+    data.postedBy = id;
+    delete data.file;
+    Buzz.create(data, function (err, buzz) {
+      Buzz.findById(buzz._id).populate('postedBy').exec(function (err, buzzPopulated) {
+        callback(err, buzzPopulated);
+      })
+    })
+  }
+  else {
+    Cloudinary.cloudinary(fileDetail, function (cloudData) {
+      data.postedBy = id;
+      data.image = {};
+      data.image.path = cloudData.url;
+      Buzz.create(data, function (err, buzz) {
+        Buzz.findById(buzz._id).populate('postedBy').exec(function (err, buzzPopulated) {
+          fs.unlink(fileDetail.path);
+          callback(err, buzzPopulated);
+        })
+      })
+    });
+  }
 };
 
 /**
@@ -33,15 +56,27 @@ exports.createBuzz = function (id, data, callback) {
  * @param callback
  */
 
-exports.deleteBuzz = function (id, callback) {
+exports.deleteBuzz = function (id, commentId, callback) {
   Buzz.findById(id, function (err, buzz) {
     if (err) {
       callback(err);
     }
     else {
-      buzz.remove(function (err, buzz) {
-        callback(err, buzz);
-      })
+      if (id && commentId) {
+        var commentIndex = _.findIndex(buzz.comments, function (Obj) {
+          return Obj._id == commentId;
+        });
+        buzz.comments.splice(commentIndex, 1);
+        buzz.save(function (err, data) {
+          callback(err, data);
+        });
+      }
+      else {
+        buzz.remove(function (err, buzz) {
+          callback(err, buzz);
+        })
+      }
+
     }
   })
 };
@@ -53,15 +88,23 @@ exports.deleteBuzz = function (id, callback) {
  * @param callback
  */
 
-exports.editBuzz = function (id, updatedBuzz, callback) {
+exports.editBuzz = function (id, commentId, updatedBuzz, callback) {
   Buzz.findById(id, function (err, buzz) {
     if (err) {
       callback(err);
     }
     else {
-      if (updatedBuzz.updatePostText) {
-        buzz.buzzContent = updatedBuzz.updatePostText;
+      /**
+       * Updated Buzz Content
+       */
+
+      if (updatedBuzz.updatedPostText) {
+        buzz.buzzContent = updatedBuzz.updatedPostText;
       }
+
+      /**
+       * like/dislike
+       */
 
       var likeIndex = _.findIndex(buzz.likedBy, function (Obj) {
         return Obj.postedBy == updatedBuzz.UserId
@@ -96,8 +139,8 @@ exports.editBuzz = function (id, updatedBuzz, callback) {
 
         if (likeIndex != -1) {
           buzz.likedBy.splice(likeIndex, 1);
-          buzz.likeFlag = false;
         }
+        buzz.likeFlag = false;
       }
 
       switch (updatedBuzz.type) {
@@ -110,14 +153,45 @@ exports.editBuzz = function (id, updatedBuzz, callback) {
           dislike();
           break;
       }
+
+      /**
+       * comments
+       */
+
+      if (updatedBuzz.comment) {
+        buzz.comments.push({
+          postedBy: updatedBuzz.UserId,
+          commentText: updatedBuzz.comment,
+          createdOn: updatedBuzz.creationTime
+        });
+      }
+
+      /**
+       * edit Comment
+       */
+
+      if (updatedBuzz.updatedComment) {
+        var commentIndex = _.findIndex(buzz.comments, function (Obj) {
+          return Obj._id == commentId;
+        });
+        if (commentIndex != -1) {
+          buzz.comments[commentIndex].commentText = updatedBuzz.updatedComment;
+        }
+      }
+
     }
 
     buzz.save(function (err, data) {
-      callback(err, data);
+      Buzz.findById(buzz._id).populate('postedBy').populate('comments.postedBy').populate('likedBy.postedBy').populate('dislikedBy.postedBy').exec(function (err, buzzPopulated) {
+        console.log(buzzPopulated);
+        callback(err, buzzPopulated);
+      })
     })
 
   })
 };
+
+
 
 
 

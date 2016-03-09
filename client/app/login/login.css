@@ -1,12 +1,10 @@
 body, html {
   height: 100%;
 }
-
 .row {
   margin: 0px;
 }
-
-.loginPageContainer {
+#loginPageContainer {
   height: 100%;
   position: relative;
   margin: auto;
@@ -15,18 +13,15 @@ body, html {
   width: 100%;
   background-image: url('https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-xlf1/v/t1.0-9/11753693_917413198314896_1744694016592788753_n.jpg?oh=5dc1196a4dc608c192fe57109e555d7f&oe=575747E9&__gda__=1464554134_197d0ae3d315f565bef7ebe2532f3791');
 }
-
-.loginFormTabs ul li {
-  width: 50%;
-  text-align: center;
+#rowLogin{
+  position: absolute;
+  top:0px;
+  bottom: 0px;
+  left:0px;
+  right: 0px;
+  margin: auto;
 }
-
-.loginForm {
-  text-align: center;
-  padding: 15px;
-}
-
-.outerForm {
+#outerForm {
   position: absolute;
   top: 0px;
   bottom: 0px;
@@ -40,18 +35,30 @@ body, html {
   border-radius: 5%;
 
 }
+#loginTitle{
+  text-align: center;
+  font-size: xx-large;
+}
 
+.loginFormTabs ul li {
+  width: 50%;
+  text-align: center;
+}
+
+.loginForm {
+  text-align: center;
+  padding: 15px;
+}
 .form {
   padding: 0px;
 }
-
 #error {
   color: red;
   padding-top: 20px;
 }
-
 .btn-google-plus {
   color: #fff;
   background-color: royalblue;
   box-shadow: 0px 0px 2px 3px rgba(12, 22, 0, 0.1);
 }
+

@@ -3,8 +3,14 @@
  */
 
 angular.module('buzzAppApp')
+
   .config(['$stateProvider', function ($stateProvider) {
     $stateProvider
+
+    /**
+     * Login State
+     */
+
       .state('login', {
         url: '/login',
         templateUrl: 'app/login/login.html',

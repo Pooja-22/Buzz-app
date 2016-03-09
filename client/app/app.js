@@ -6,7 +6,8 @@ angular.module('buzzAppApp', [
   'ngSanitize',
   'ui.router',
   'ui.bootstrap',
-  'angularMoment'
+  'angularMoment',
+  'ngBootbox'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider

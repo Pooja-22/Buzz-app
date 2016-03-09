@@ -5,18 +5,40 @@
 'use strict';
 
 angular.module('buzzAppApp')
+
   .factory('buzzService', function ($resource) {
 
     /**
      * Factory for all type of requests to Buzz
      */
 
-    return $resource('/api/buzz/:buzzId', {},
+    return $resource('/api/buzz/:buzzId/:commentId',
+      {},
+
       {
-        getBuzz: {
+        /**
+         * Save Buzz (Image included)
+         */
+
+        saveBuzzData: {
+          method: 'POST',
+          transformRequest: angular.identity,
+          headers: {'Content-Type': undefined}
+        },
+
+        /**
+         * Get request
+         */
+
+        getBuzzData: {
           method: 'GET',
           isArray: true
         },
+
+        /**
+         * Update request
+         */
+
         update: {
           method: 'PUT'
         }

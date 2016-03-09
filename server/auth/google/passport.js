@@ -26,7 +26,7 @@ exports.setup = function (User, config) {
           role: 'user',
           provider: 'google',
           google: profile._json
-        }
+        };
         UserService.createAndUpdate(google_id, userObj, function (err, user) {
             {
               if (err) return done(err);

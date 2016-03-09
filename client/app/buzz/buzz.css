@@ -1,6 +1,6 @@
 #postInputText {
   height: 80px;
-  width: 90%;
+  width: 100%;
   text-align: inherit;
 }
 
@@ -16,40 +16,91 @@
   padding-top: 10px;
 }
 
-#post {
+.post {
   border: 1px solid #ddd;
   box-shadow: 0px 0px 2px 3px rgba(12, 22, 0, 0.1);
   margin-top: 30px;
+  background: #ffffff;
 
 }
 
-#deleteAndEdit {
+.deleteAndEdit {
   right: 10px;
   position: absolute;
+  padding-top:13px ;
 
 }
 
-#postType {
+.postType {
   color: #105cb6;
   padding: 8px;
   padding-bottom: 0px;
 }
 
-#creationTime {
+.creationTime {
   color: #105cb6;
   font-size: small;
 }
 
-#div_postText {
+.div_postText {
   padding: 10px;
   border: 1px solid #269abc;
   margin-top: 5px;
 }
 
-#div_likesDislikes {
+.div_likesDislikes {
   margin-top: 5px;
 }
 
-.likeDislikeChangeColor{
-  background: #9acfea;
+.likeDislikeChangeColor {
+  background: #39b3d7;
 }
+.changeType{
+  background: #222222;
+  color: #ffffff;
+}
+li{
+list-style: none;
+}
+#comment{
+  background: #dddddd;
+}
+select {
+  padding:3px;
+  margin: 0;
+  -webkit-border-radius:4px;
+  -moz-border-radius:4px;
+  border-radius:4px;
+  -webkit-box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+  -moz-box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+  box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+  background: #f8f8f8;
+  color:#999;
+  border:none;
+  outline:none;
+  display: inline-block;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  appearance:none;
+  cursor:pointer;
+}
+#preview{
+  border: 1px solid #ddd;
+  box-shadow: 0px 0px 2px 3px rgba(12, 22, 0, 1);
+  margin-top: 30px;
+}
+#previewText{
+  font-size: large;
+  text-align: center;
+  margin-top: 20px;
+}
+#form{
+  margin-left: 0px;
+  margin-top: 10px;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  box-shadow: 0px 0px 2px 3px rgba(12, 22, 0, 0.1);
+  padding: 10px;
+}
+
+
