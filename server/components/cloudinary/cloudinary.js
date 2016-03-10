@@ -12,8 +12,8 @@ cloudinary.config(config.cloudinary);
  * upload images to cloud
  */
 
-exports.cloudinary = function (data , callback) {
-  cloudinary.uploader.upload(data.path, function (result) {
+exports.cloudinary = function (data, callback) {
+  cloudinary.uploader.upload(data && data.path, function (result) {
     return callback(result);
   });
 };

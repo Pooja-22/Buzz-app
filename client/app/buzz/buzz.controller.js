@@ -6,7 +6,7 @@
 
 angular.module('buzzAppApp')
 
-  .controller('BuzzCtrl', ['$scope', 'buzzService', 'Auth', '$state', '$window', '$timeout', function ($scope, buzzService, Auth, $state, $window, $timeout) {
+  .controller('BuzzCtrl', ['$scope', 'buzzService', 'Auth', '$state', '$window', 'fileReader', '$document', function ($scope, buzzService, Auth, $state, $window, fileReader, $document) {
 
     $scope.BuzzData = {};
     $scope.postText = "";
@@ -37,11 +37,15 @@ angular.module('buzzAppApp')
     $scope.buzzType = 'Activity';
     $scope.fileValidity = true;
     $scope.params = $state.params;
-    $scope.myFile = '';
+    $scope.file = '';
     $scope.Buzz = [];
     var page = 0;
     var perPage = 10;
     $scope.loader = false;
+    $scope.loading = true;
+    $scope.like = false;
+    $scope.dislike = false;
+    $scope.imageSrc = '';
 
     /**
      * modify to form data
@@ -66,17 +70,16 @@ angular.module('buzzAppApp')
         buzzContent: $scope.postText,
         buzzType: $scope.buzzType
       };
-      if ($scope.myFile) {
-        $scope.BuzzData.file = $scope.myFile
+      if ($scope.file) {
+        $scope.BuzzData.file = $scope.file
       }
       var buzzData = modifyToFormData($scope.BuzzData);
-      $timeout(function () {
-        buzzService.saveBuzzData(buzzData, function (data) {
-          $scope.postText = '';
-          $scope.Buzz.unshift(data);
-          $scope.loader = false;
-        });
-      }, 1000);
+      buzzService.saveBuzzData(buzzData, function (data) {
+        $scope.postText = '';
+        $scope.file = '';
+        $scope.Buzz.unshift(data);
+        $scope.loader = false;
+      });
     };
 
     /**
@@ -84,8 +87,27 @@ angular.module('buzzAppApp')
      */
 
     $scope.getBuzz = function () {
-      buzzService.getBuzzData({page: page, perPage: perPage}, function (data) {
+      $scope.loading = true;
+      var filter = {
+        page: page,
+        perPage: perPage,
+        category: $scope.params.type
+      };
+      buzzService.getBuzzData(filter, function (data) {
         $scope.Buzz = $scope.Buzz.concat(data);
+        $scope.Buzz.forEach(function (obj) {
+          obj.likedBy.forEach(function (likes) {
+            if (likes.postedBy._id == $scope.getCurrentUser()._id) {
+              obj.like = true;
+            }
+          });
+          obj.dislikedBy.forEach(function (dislikes) {
+            if (dislikes.postedBy._id == $scope.getCurrentUser()._id) {
+              obj.dislike = true;
+            }
+          })
+        })
+        $scope.loading = false;
       })
 
     };
@@ -147,8 +169,8 @@ angular.module('buzzAppApp')
       buzzService.update({buzzId: id}, $scope.updatePost, function (data) {
         $scope.Buzz[index].dislikedBy = data.dislikedBy;
         $scope.Buzz[index].likedBy = data.likedBy;
-        $scope.Buzz[index].likeFlag = data.likeFlag;
-        $scope.Buzz[index].dislikeFlag = data.dislikeFlag;
+        $scope.Buzz[index].like = true;
+        $scope.Buzz[index].dislike = false;
 
       });
     };
@@ -164,8 +186,8 @@ angular.module('buzzAppApp')
       buzzService.update({buzzId: id}, $scope.updatePost, function (data) {
         $scope.Buzz[index].dislikedBy = data.dislikedBy;
         $scope.Buzz[index].likedBy = data.likedBy;
-        $scope.Buzz[index].likeFlag = data.likeFlag;
-        $scope.Buzz[index].dislikeFlag = data.dislikeFlag;
+        $scope.Buzz[index].dislike = true;
+        $scope.Buzz[index].like = false;
 
       });
     };
@@ -259,16 +281,58 @@ angular.module('buzzAppApp')
       }
     })
 
-    $scope.keyPressCreateComment = function(e,id, commentText, index){
-      if(e==13){
+    /**
+     * Save comment on Enter
+     * @param e
+     * @param id
+     * @param commentText
+     * @param index
+     */
+
+    $scope.keyPressCreateComment = function (e, id, commentText, index) {
+      if (e == 13) {
         $scope.buzzComment(id, commentText, index);
       }
-    }
+    };
 
-    $scope.keyPressEditComment = function(e,buzzId, commentId, updatedValue, index, buzzIndex){
-      if(e==13){
+    /**
+     * save edited  comment on enter
+     * @param e
+     * @param buzzId
+     * @param commentId
+     * @param updatedValue
+     * @param index
+     * @param buzzIndex
+     */
+
+    $scope.keyPressEditComment = function (e, buzzId, commentId, updatedValue, index, buzzIndex) {
+      if (e == 13) {
         $scope.editComment(buzzId, commentId, updatedValue, index, buzzIndex);
       }
+    };
+
+    /**
+     * Image preview
+     */
+
+    $scope.getFile = function () {
+      fileReader.readAsDataUrl($scope.file, $scope)
+        .then(function (result) {
+          $scope.imageSrc = result;
+        });
+    };
+
+    /**
+     *
+     */
+
+    $scope.modalDislike = function(index){
+      $scope.dislikeUsers = $scope.Buzz[index].dislikedBy;
     }
+
+    $scope.modalLike = function(index){
+      $scope.likeUsers = $scope.Buzz[index].likedBy;
+    }
+
 
   }]);

@@ -15,7 +15,8 @@ var BuzzService = require('./buzz.service');
 exports.findBuzz = function (req, res) {
   var page = req.query.page;
   var perPage = req.query.perPage;
-  BuzzService.find(page, perPage, function (err, buzz) {
+  var criteria = req.query.category;
+  BuzzService.find(page, perPage, criteria, function (err, buzz) {
     if (err) {
       return HandleError(res, err);
     }

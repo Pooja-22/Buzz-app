@@ -17,7 +17,6 @@
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
   <!-- build:css(client) app/vendor.css -->
   <!-- bower:css -->
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
   <!-- endbower -->
   <!-- endbuild -->
   <!-- build:css({.tmp,client}) app/app.css -->
@@ -65,7 +64,6 @@
 <![endif]-->
 <!-- build:js({client,node_modules}) app/vendor.js -->
 <!-- bower:js -->
-<script src="bower_components/jquery/dist/jquery.js"></script>
 <script src="bower_components/angular/angular.js"></script>
 <script src="bower_components/angular-resource/angular-resource.js"></script>
 <script src="bower_components/angular-cookies/angular-cookies.js"></script>
@@ -83,23 +81,27 @@
 <!-- injector:js -->
 <script src="app/buzz/buzz.controller.js"></script>
 <script src="app/buzz/buzz.js"></script>
-<script src="app/buzz/buzz.service.js"></script>
+<script src="app/complaint/complaint.controller.js"></script>
+<script src="app/complaint/complaint.js"></script>
 <script src="app/login/login.controller.js"></script>
 <script src="app/login/login.js"></script>
 <script src="app/profile/profile.controller.js"></script>
 <script src="app/profile/profile.js"></script>
 <script src="components/auth/auth.service.js"></script>
 <script src="components/auth/user.service.js"></script>
-<script src="components/directives/buzz.fileModel.directive.js"></script>
+<script src="components/directives/file.model.js"></script>
+<script src="components/filereader/fileReader.service.js"></script>
 <script src="components/modal/modal.service.js"></script>
 <script src="components/mongoose-error/mongoose-error.directive.js"></script>
 <script src="components/navbar/navbar.controller.js"></script>
+<script src="components/services/buzz.service.js"></script>
+<script src="components/services/complain.service.js"></script>
 <!-- endinjector -->
 <!-- endbuild -->
 <script src="bower_components/moment/min/moment.min.js"></script>
 <script src="bower_components/angular-moment/angular-moment.js"></script>
 <script src="bower_components/jquery/dist/jquery.js"></script>
-<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-media-preview/src/angular-media-preview.module.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
 <script src="bower_components/bootbox/bootbox.js"></script>
 <script src="bower_components/ngBootbox/dist/ngBootbox.js"></script>

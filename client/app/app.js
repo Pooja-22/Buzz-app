@@ -7,7 +7,8 @@ angular.module('buzzAppApp', [
   'ui.router',
   'ui.bootstrap',
   'angularMoment',
-  'ngBootbox'
+  'ngBootbox',
+  'angular-media-preview'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider

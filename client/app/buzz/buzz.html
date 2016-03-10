@@ -1,60 +1,55 @@
 <div ng-init='getBuzz()'>
 
   <!--input buzz-->
-  <div style="margin-top: 30px;">
 
-
+  <div style="margin-top: 15px;">
+    <!--Form For Buzz-->
     <form enctype="multipart/form-data">
-      <div class="row" id="form" ng-hide="params.type=='Activity' || params.type=='Lost N Found' ">
-
-        <div class="col-md-24" style="padding:0px;margin: auto;">
-          <div style="text-align: center;height: 100%;width: 100%;position: absolute;top: 0px;left: 0px;z-index: 100;background: rgba(0,0,0,0.5)" ng-show="loader">
-            <span style="display: inline-block;height: 100%;vertical-align: middle"></span>
-            <img src="../assets/images/preloader.gif" height="50" width="50">
-          </div>
-          <textarea ng-model="postText" placeholder="What's on your mind?" id="postInputText"></textarea>
-
-          <div class="col-md-24" style="padding: 20px;padding-left:0px;position: relative">
-            <ul class="list-inline">
-              <li>
-                <select ng-model="buzzType">
-                  <option value="Activity">Activity</option>
-                  <option value="Lost N Found">Lost N Found</option>
-                </select>
-              </li>
-              <li>
-                <input type='file' file-model="myFile" >
-                <!--<label>-->
-                <!--<span class="glyphicon glyphicon-camera" aria-hidden="true"></span>-->
-                <!--<input type="file" style="display:none" file-model ng-model="myFile"-->
-                <!--media-preview preview-container="imgPreview"/>-->
-                <!--</label>-->
-              </li>
-              <li>
-                <button class='btn btn-primary' ng-click="saveBuzz()" style="right: 0px;position: absolute;top:20px; "
-                        ng-show="postText.length">Buzz
-                </button>
-              </li>
-            </ul>
-
-
-          </div>
-
+      <!--Form Div-->
+      <div class="row" id="form">
+        <!--Loader-->
+        <div ng-show="loader" id="loader">
+          <span id="loaderSpan"></span>
+          <img src="../assets/images/preloader.gif" height="50" width="50">
         </div>
+        <!--Textarea for Buzz Text-->
+        <textarea ng-model="postText" placeholder="What's on your mind?" id="postInputText"></textarea>
+        <!--Select tag,Choose File,Buzz Button-->
+        <div class="col-md-24" id="submitArea">
+          <ul class="list-inline">
+            <li>
+              <select ng-model="buzzType">
+                <option value="Activity">Activity</option>
+                <option value="Lost N Found">Lost N Found</option>
+              </select>
+            </li>
+            <li>
+              <label style="margin-left: 25px;">
+                <span class="glyphicon glyphicon glyphicon-camera icon-hover" aria-hidden="true"></span>
+                <input type="file" style="display:none" file-model="file" accept="image/*" ng-model="file">
+              </label>
+            </li>
 
+            <li>
+              <button class='btn btn-primary' ng-click="saveBuzz()" id="buzzBtn" ng-disabled="postText.length === 0">
+                Buzz
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
-    </form>
   </div>
+  </form>
+</div>
 
+<!--preview-->
 
-  <!--preview-->
+<div id="preview" ng-show="postText.length || file">
+  <p id="previewText">Preview</p>
 
-  <div id="preview" ng-show="postText.length">
-    <p id="previewText">Preview</p>
+  <div class="post" ng-class="{'changeType':buzzType=='Lost N Found'}">
 
-    <div class="post" ng-class="{'changeType':buzzType=='Lost N Found'}">
-
-      <div style="position: relative">
+    <div style="position: relative">
 
       <span>
         <img src="{{getCurrentUser().google.image.url}}">
@@ -68,12 +63,18 @@
         <span class="glyphicon glyphicon-pencil" style="color:#337ab7"></span>
       </span>
 
+    </div>
+
+    <div class="div_postText">
+      <!--show-more defined in buzz.directive-->
+      <span ng-bind-html="postText | linky" style="word-wrap: break-word;"></span>
+
+      <br><br>
+
+      <div id="imagePreview" style="height: 250px;width: 250px;padding-left: 20px;" ng-show="file">
+        <img ng-src="{{imageSrc}}" style="height: 250px;width: 250px;"><br/>
       </div>
 
-      <div class="div_postText">
-        <!--show-more defined in buzz.directive-->
-        <span ng-bind-html="postText | linky" style="word-wrap: break-word;"></span>
-      </div>
 
       <div class="div_likesDislikes">
         <button class="glyphicon glyphicon-thumbs-up" style="padding: 2px;border-radius: 50%;color:#337ab7"
@@ -102,10 +103,15 @@
 
       </div>
     </div>
-    <br><br>
-  </div>
 
-  <!-- Posted Buzz-->
+  </div>
+  <br><br>
+</div>
+
+<!-- Posted Buzz-->
+
+
+<div>
 
   <div class="post" ng-repeat="buzz in Buzz">
 
@@ -121,8 +127,8 @@
         <!--Delete and Edit button of Buzz-->
       <span class='deleteAndEdit' ng-if="showBtn(buzz.postedBy._id)">
         <a href="" class="glyphicon glyphicon-trash"
-          ng-bootbox-confirm="Are you sure you want to confirm this?"
-          ng-bootbox-confirm-action="deleteBuzz(buzz._id,$index)">
+           ng-bootbox-confirm="Are you sure you want to confirm this?"
+           ng-bootbox-confirm-action="deleteBuzz(buzz._id,$index)">
         </a>&nbsp&nbsp
         <a href="" class="glyphicon glyphicon-pencil" ng-click="showEditDiv(buzz._id)"></a>
       </span>
@@ -144,25 +150,31 @@
              ng-show="content.isShowMore">Show More</a>
           <a ng-click="content=moreLess(buzz.buzzContent,400)" ng-show="content.isShowLess">Show Less </a>
 
-          <div style="text-align: center;padding: 20px;" ng-show="buzz.image.path">
+          <div style="padding: 20px;" ng-show="buzz.image.path">
             <img src="{{buzz.image.path}}" style="height:250px;width:250px;">
 
           </div>
         </div>
-
         <!--likes/Dislikes/Comments-->
         <div class="div_likesDislikes">
+
           <!--Like Button-->
-          <button ng-disabled ="buzz.likeFlag" class="glyphicon glyphicon-thumbs-up" style="padding: 2px;border-radius: 50%;color:#337ab7"
-                  ng-click="countLike(buzz._id,$index)" ng-class="{'likeDislikeChangeColor':buzz.likeFlag}"></button>
+          <button class="glyphicon glyphicon-thumbs-up"
+                  style="padding: 2px;border-radius: 50%;color:#337ab7"
+                  ng-class="{'likeDislikeChangeColor':buzz.like==true}" ng-disabled="buzz.like==true"
+                  ng-click="countLike(buzz._id,$index)"></button>
           &nbsp
-          <span style="padding: 2px;" ng-click="showList()">{{buzz.likedBy.length}}</span>
+          <span style="padding: 2px;cursor: pointer" data-toggle="modal" data-target="#likeModal"
+                ng-click="modalLike($index)" data-target="#dislikeModal">{{buzz.likedBy.length}}</span>
           <!--Dislike Button-->
-          <button ng-disabled ="buzz.dislikeFlag" class="glyphicon glyphicon-thumbs-down" style="padding: 2px;border-radius: 50%;color:#337ab7"
-                  ng-click="countDislike(buzz._id,$index)" ng-class="{'likeDislikeChangeColor':buzz.dislikeFlag}">
+          <button class="glyphicon glyphicon-thumbs-down"
+                  style="padding: 2px;border-radius: 50%;color:#337ab7"
+                  ng-class="{'likeDislikeChangeColor':buzz.dislike==true}" ng-disabled="buzz.dislike==true"
+                  ng-click="countDislike(buzz._id,$index)">
           </button>
           &nbsp
-          <span style="padding: 2px;" ng-click="showList()">{{buzz.dislikedBy.length}}</span>
+          <span style="padding: 2px;cursor:pointer;" data-toggle="modal" ng-click="modalDislike($index)"
+                data-target="#dislikeModal">{{buzz.dislikedBy.length}}</span>
           <!--Comment-->
           <a href="" ng-click="active=!active"><span class="glyphicon glyphicon-comment"
                                                      style="padding: 2px;"></span></a>&nbsp
@@ -182,15 +194,18 @@
                   </span>
                     <span><img src="{{comment.postedBy.google.image.url}}" style="height: 38px;width: 35px;;"></span>
                     <span style="color: #105cb6;font-size:small;font-weight:bold; ">{{comment.postedBy.name}}</span>
-                    <span style="padding-left: 5px;font-size:1em;">{{comment.commentText}}</span><br>
+                      <span style="padding-left: 5px;font-size:1em;"
+                            ng-bind-html="comment.commentText | linky"></span><br>
                   <span class="creationTime" am-time-ago="comment.createdOn"
                         style="padding-left: 40px;font-size:0.8em;margin-top: -10px;display:block"></span>
                   </p>
                   <!--Edit comment div-->
                   <div style="padding:10px;padding-left: 0px;"
                        ng-show="showCommentEdit.showDiv&&showCommentEdit.showBuzzId==buzz._id&&showCommentEdit.showCommentId==comment._id">
-                    <img src="{{getCurrentUser().google.image.url}}" style="height: 26px;width: 25px;margin-top: -3px;">
-                    <input type="text" ng-value="comment.commentText" ng-model="updatedComment" ng-keyup="keyPressEditComment($event.keyCode,buzz._id,comment._id,updatedComment,$index,$parent.$index)"
+                    <img src="{{getCurrentUser().google.image.url}}"
+                         style="height: 26px;width: 25px;margin-top: -3px;">
+                    <input type="text" ng-value="comment.commentText" ng-model="updatedComment"
+                           ng-keyup="keyPressEditComment($event.keyCode,buzz._id,comment._id,updatedComment,$index,$parent.$index)"
                            style="width: 89%;color: #000000">
                     <a href="" ng-click="editComment(buzz._id,comment._id,updatedComment,$index,$parent.$index)">
                       <span class="glyphicon glyphicon-ok" style="padding:2px;"></span>
@@ -206,7 +221,8 @@
               <div style="padding:10px;padding-left: 0px;">
                 <img src="{{getCurrentUser().google.image.url}}" style="height: 26px;width: 25px;margin-top: -3px;">
                 <input type="text" placeholder="Write a Comment" style="width: 93%;color: #000000"
-                       ng-model="commentText" ng-keyup="keyPressCreateComment($event.keyCode,buzz._id,commentText,$index)" >
+                       ng-model="commentText"
+                       ng-keyup="keyPressCreateComment($event.keyCode,buzz._id,commentText,$index)">
                 <a href="" ng-click="buzzComment(buzz._id,commentText,$index)">
                   <span class="glyphicon glyphicon-ok" style="padding:2px;"></span>
                 </a>
@@ -221,12 +237,71 @@
     </div>
 
   </div>
-  <br>
-
-  No More Posts
-
-
 
 </div>
+<br>
+<div style="text-align: center">
+  <img src="../assets/images/logo.gif" ng-show="loading">
+
+  <p>
+    No more posts
+  </p>
+</div>
+<!--<div style="text-align:center;" ng-show=getLoader>-->
+<!--<span style="display: inline-block;height: 100%;vertical-align: middle"></span>-->
+<!--<img src="../assets/images/preloader.gif" height="50" width="50">-->
+<!--</div>-->
+<div id="dislikeModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Dislikes&nbsp({{dislikeUsers.length}})</h4>
+      </div>
+      <div class="modal-body">
+        <div ng-repeat="dislike in dislikeUsers">
+          <p>
+            <img src="{{dislike.postedBy.google.image.url}}">
+            {{dislike.postedBy.name}}
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="likeModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" data-data="buzz">&times;</button>
+        <h4 class="modal-title">Likes&nbsp({{likeUsers.length}})</h4>
+      </div>
+      <div class="modal-body">
+        <div ng-repeat="likes in likeUsers">
+          <p>
+            <img src="{{likes.postedBy.google.image.url}}">
+            {{likes.postedBy.name}}
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div>
+
+
 
 

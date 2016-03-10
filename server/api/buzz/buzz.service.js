@@ -13,10 +13,15 @@ var fs = require('fs');
  * @param callback
  */
 
-exports.find = function (page, perPage, callback) {
-  Buzz.find({}).skip(page * perPage).limit(perPage).sort({createdOn: -1}).populate('postedBy').populate('comments.postedBy').populate('likedBy.postedBy').populate('dislikedBy.postedBy').exec(function (err, buzz) {
+exports.find = function (page, perPage, criteria, callback) {
+  var query = {};
+  if (criteria != 'buzz') {
+    query = {buzzType: criteria};
+  }
+  Buzz.find(query).skip(page * perPage).limit(perPage).sort({createdOn: -1}).populate('postedBy').populate('comments.postedBy').populate('likedBy.postedBy').populate('dislikedBy.postedBy').exec(function (err, buzz) {
     callback(err, buzz);
-  })
+  });
+
 };
 
 /**
@@ -30,9 +35,13 @@ exports.createBuzz = function (id, data, fileDetail, callback) {
     data.postedBy = id;
     delete data.file;
     Buzz.create(data, function (err, buzz) {
-      Buzz.findById(buzz._id).populate('postedBy').exec(function (err, buzzPopulated) {
-        callback(err, buzzPopulated);
-      })
+      if (err) {
+        helper.error(err)
+      } else {
+        Buzz.findById(buzz._id).populate('postedBy').exec(function (err, buzzPopulated) {
+          callback(err, buzzPopulated);
+        })
+      }
     })
   }
   else {
@@ -41,10 +50,15 @@ exports.createBuzz = function (id, data, fileDetail, callback) {
       data.image = {};
       data.image.path = cloudData.url;
       Buzz.create(data, function (err, buzz) {
-        Buzz.findById(buzz._id).populate('postedBy').exec(function (err, buzzPopulated) {
-          fs.unlink(fileDetail.path);
-          callback(err, buzzPopulated);
-        })
+        if (err) {
+          helper.error(err)
+        }
+        else {
+          Buzz.findById(buzz._id).populate('postedBy').exec(function (err, buzzPopulated) {
+            fs.unlink(fileDetail.path);
+            callback(err, buzzPopulated);
+          })
+        }
       })
     });
   }
@@ -117,30 +131,30 @@ exports.editBuzz = function (id, commentId, updatedBuzz, callback) {
 
         if (likeIndex === -1) {
           buzz.likedBy.push({
-            postedBy: updatedBuzz.UserId
+            postedBy: updatedBuzz.UserId,
+            likeFlag: true
           });
-          buzz.likeFlag = true;
         }
 
         if (dislikeIndex != -1) {
+          buzz.dislikedBy[dislikeIndex].dislikeFlag = false;
           buzz.dislikedBy.splice(dislikeIndex, 1);
         }
-        buzz.dislikeFlag = false;
 
       }
 
       function dislike() {
         if (dislikeIndex === -1) {
           buzz.dislikedBy.push({
-            postedBy: updatedBuzz.UserId
+            postedBy: updatedBuzz.UserId,
+            dislikeFlag: true
           });
-          buzz.dislikeFlag = true;
         }
 
         if (likeIndex != -1) {
+          buzz.likedBy[likeIndex].likeFlag = false;
           buzz.likedBy.splice(likeIndex, 1);
         }
-        buzz.likeFlag = false;
       }
 
       switch (updatedBuzz.type) {

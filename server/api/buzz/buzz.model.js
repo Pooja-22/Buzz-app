@@ -13,13 +13,14 @@ var BuzzSchema = new Schema({
   createdOn: {type: Date, default: Date.now()},
   //Posted time
   buzzType: {type: String, default: 'Activity'},
-    //Buzz type
+  //Buzz type
   postedBy: {
     type: mongoose.Schema.Types.ObjectId, //Reference of owner of buzz
     ref: 'User'
   },
 
   likedBy: [{
+    likeFlag: {type: Boolean, default: false},
     postedBy: {
       type: mongoose.Schema.Types.ObjectId, //Reference of user who liked buzz
       ref: 'User'
@@ -28,15 +29,13 @@ var BuzzSchema = new Schema({
   }],
 
   dislikedBy: [{
+    dislikeFlag: {type: Boolean, default: false},
     postedBy: {
       type: mongoose.Schema.Types.ObjectId, //Reference of user who liked buzz
       ref: 'User'
     }
   }],
 
-  likeFlag: {type: Boolean, default: false},
-
-  dislikeFlag: {type: Boolean, default: false},
 
   comments: [{
     postedBy: {
@@ -48,10 +47,8 @@ var BuzzSchema = new Schema({
   }],
 
   image: {
-    path: {type: String},
-    isPresent: {type: Boolean}
+    path: {type: String}
   }
-
 
 });
 
