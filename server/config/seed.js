@@ -7,18 +7,17 @@
 
 var User = require('../api/user/user.model');
 
-//User.find({}).remove(function() {
+//User.find({role:'admin'}).remove(function() {
 //  User.create({
-//    provider: 'local',
-//    name: 'Test User',
-//    email: 'test@test.com',
-//    password: 'test'
+//    provider: 'google',
+//    name: 'Pooja Garg',
+//    email: 'pooja.garg@tothenew.com',
+//    role: 'admin'
 //  }, {
-//    provider: 'local',
+//    provider: 'google',
 //    role: 'admin',
-//    name: 'Admin',
-//    email: 'admin@admin.com',
-//    password: 'admin'
+//    name: 'Prateek',
+//    email: 'prateek@tothenew.com'
 //  }, function() {
 //      console.log('finished populating users');
 //    }

@@ -1,3 +1,17 @@
-<div>
-  Complaints
+<div class="col-md-24" style="padding: 20px;">
+  <!-- Nav tabs -->
+  <div class="card">
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active"><a ui-sref=".fileComplaint">File
+        Complaint</a></li>
+      <li role="presentation"><a ui-sref=".user">Filed
+        Complaints</a></li>
+
+      <li role="presentation"><a ui-sref=".admin" ng-show="isAdmin()">Complaints</a></li>
+    </ul>
+  </div>
 </div>
+
+<div ui-view=""></div>
+
+

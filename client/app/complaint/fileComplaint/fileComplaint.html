@@ -1,0 +1,43 @@
+<!--File complaint Tab-->
+<div role="tabpanel" class="tab-pane active" id="fileComplaint">
+  <!--Input Form for Complaints-->
+  <form role="form" class='complaintForm'>
+    <div ng-show="loader" id="loader">
+      <span id="loaderSpan"></span>
+      <img src="../assets/images/preloader.gif" height="50" width="50">
+    </div>
+    <div class="col-lg-24">
+      <!--Select Department-->
+      <div class="form-group selectDept">
+        <label for="sel1">Select Department</label>
+        <select class="form-control" id="sel1" ng-model="department">
+          <option value="IT">IT</option>
+          <option value="Infrastructure">Infrastructure</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <!--Complaint Text Area-->
+      <div class="form-group">
+        <label for="InputMessage">Your Complain</label>
+
+        <div class="input-group">
+          <textarea name="InputMessage" id="InputMessage" class="form-control" rows="5" ng-model="complaintText" style="resize: none;"
+                    required></textarea>
+          <span class="input-group-addon"></span>
+        </div>
+      </div>
+      <!--image upload-->
+      <label style="margin-left: 5px;">
+        <span class="glyphicon glyphicon glyphicon-camera icon-hover" aria-hidden="true"></span>
+        <input type="file" style="display:none" file-model="file" accept="image/*" ng-model="file">
+      </label>
+      <!--Submit Button-->
+      <input type="submit" name="submit" id="submit" value="Submit" class="btn btn-info pull-right"
+             ng-click="saveComplaint()" ng-disabled="complaintText.length===0">
+    </div>
+    <!--Image Preview-->
+    <div ng-show="file" style="margin-left: 15px;">
+      <img ng-src="{{imageSrc}}" style="height: 250px;width: 250px;"><br/>
+    </div>
+  </form>
+</div>

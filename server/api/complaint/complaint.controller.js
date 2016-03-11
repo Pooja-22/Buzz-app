@@ -2,7 +2,6 @@
  * Created by pooja on 10/3/16.
  */
 
-
 'use strict';
 
 var ComplaintService = require('./complaint.service');
@@ -14,7 +13,8 @@ var ComplaintService = require('./complaint.service');
  */
 
 exports.findComplaint = function (req, res) {
-  ComplaintService.findComplaint(function (err, complaint) {
+  var id = req.query.userId;
+  ComplaintService.findComplaint(id, function (err, complaint) {
     if (err) {
       return HandleError(res, err);
     }
@@ -31,7 +31,8 @@ exports.findComplaint = function (req, res) {
  */
 
 exports.createComplaint = function (req, res) {
-  ComplaintService.createComplaint(function (err, complaint) {
+  var userId = req.user._id;
+  ComplaintService.createComplaint(userId, req.body, req.file, function (err, complaint) {
     if (err) {
       return HandleError(res, err);
     }
@@ -41,22 +42,6 @@ exports.createComplaint = function (req, res) {
   })
 };
 
-/**
- *Delete Complaint only by creator of Complaint
- * @param req
- * @param res
- */
-
-exports.deleteComplaint = function (req, res) {
-  ComplaintService.deleteComplaint(function (err, complaint) {
-    if (err) {
-      return HandleError(res, err);
-    }
-    else {
-      return res.status(201).json(complaint);
-    }
-  })
-};
 
 /**
  *Edit complaint only by creator
@@ -65,14 +50,18 @@ exports.deleteComplaint = function (req, res) {
  */
 
 exports.editComplaint = function (req, res) {
-  ComplaintService.editComplaint(function (err, complaint) {
-    if (err) {
-      return HandleError(res, err);
+  var id = req.params.id;
+  var userId = req.user._id;
+  console.log(req.body)
+  ComplaintService.editComplaint(id, userId, req.body, function (err, complaint) {
+      if (err) {
+        return HandleError(res, err);
+      }
+      else {
+        return res.status(201).json(complaint);
+      }
     }
-    else {
-      return res.status(201).json(complaint);
-    }
-  })
+  )
 };
 
 /**

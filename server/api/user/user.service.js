@@ -17,6 +17,16 @@ exports.find = function (query, callback) {
 };
 
 /**
+ * Get list of users
+ */
+
+exports.getUsers = function (callback) {
+  User.find({role:'admin'}, 'name email', function (err, users) {
+    callback(err, users);
+  });
+};
+
+/**
  *Find user and update it, used by passport.js
  * @param id
  * @param data

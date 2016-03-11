@@ -106,7 +106,7 @@ angular.module('buzzAppApp')
               obj.dislike = true;
             }
           })
-        })
+        });
         $scope.loading = false;
       })
 
@@ -323,12 +323,17 @@ angular.module('buzzAppApp')
     };
 
     /**
-     *
+     *populate data in Dislike Modal
      */
 
     $scope.modalDislike = function(index){
       $scope.dislikeUsers = $scope.Buzz[index].dislikedBy;
-    }
+    };
+
+    /**
+     * populate Data in Like Modal
+     * @param index
+     */
 
     $scope.modalLike = function(index){
       $scope.likeUsers = $scope.Buzz[index].likedBy;

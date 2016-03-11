@@ -14,7 +14,6 @@ var router = express.Router();
 
 router.get('/', controller.findComplaint);
 router.post('/', auth.isAuthenticated(), upload.single('file'), controller.createComplaint);
-router.delete('/:id', auth.isAuthenticated(), controller.deleteComplaint);
 router.put('/:id', auth.isAuthenticated(), controller.editComplaint);
 
 

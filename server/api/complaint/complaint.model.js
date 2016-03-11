@@ -10,7 +10,7 @@ var Schema = mongoose.Schema;
 var ComplainSchema = new Schema({
 
   complaintText: {type: String, required: true},  //Complaint Text
-  status: {type: String,default:'open'},  //Status of Complaint
+  status: {type: String, default: 'Open'},  //Status of Complaint
   department: {type: String},   //Department--IT/Infrastructure/Other
   postedBy: {
     type: mongoose.Schema.Types.ObjectId, //User who filed complaint
@@ -22,7 +22,8 @@ var ComplainSchema = new Schema({
   },
   image: {
     path: {type: String}
-  }
+  },
+  createdOn: {type: Date, default: Date.now()}
 
 });
 

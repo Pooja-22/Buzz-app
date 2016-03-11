@@ -4,7 +4,7 @@ var path = require('path');
 var _ = require('lodash');
 
 function requiredProcessEnv(name) {
-  if(!process.env[name]) {
+  if (!process.env[name]) {
     throw new Error('You must set the ' + name + ' environment variable');
   }
   return process.env[name];
@@ -33,7 +33,7 @@ var all = {
   },
 
   // List of user roles
-  userRoles: [ 'user', 'admin'],
+  userRoles: ['user', 'admin'],
 
   // MongoDB connection options
   mongo: {
@@ -45,9 +45,9 @@ var all = {
   },
 
   google: {
-    clientID:     process.env.GOOGLE_ID || '568365272558-24jtv56gl2hj50m8dpvbf4rlck7l7uic.apps.googleusercontent.com',
+    clientID: process.env.GOOGLE_ID || '568365272558-24jtv56gl2hj50m8dpvbf4rlck7l7uic.apps.googleusercontent.com',
     clientSecret: process.env.GOOGLE_SECRET || 'i2QP978S0nyRcDfmeDVBUnWF',
-    callbackURL:  (process.env.DOMAIN || '') + '/auth/google/callback'
+    callbackURL: (process.env.DOMAIN || '') + '/auth/google/callback'
   }
 };
 

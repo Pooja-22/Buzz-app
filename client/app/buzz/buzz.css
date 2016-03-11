@@ -2,6 +2,7 @@
   height: 80px;
   width: 100%;
   text-align: inherit;
+  resize: none;
 }
 
 #buzzButton {

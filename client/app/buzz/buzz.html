@@ -2,7 +2,7 @@
 
   <!--input buzz-->
 
-  <div style="margin-top: 15px;">
+  <div style="margin-top: 15px;" ng-hide="params.type=='Activity' || params.type=='Lost N Found' ">
     <!--Form For Buzz-->
     <form enctype="multipart/form-data">
       <!--Form Div-->
@@ -38,8 +38,8 @@
           </ul>
         </div>
       </div>
+    </form>
   </div>
-  </form>
 </div>
 
 <!--preview-->
@@ -95,7 +95,6 @@
             <div style="padding:10px;padding-left: 0px;">
               <img src="{{getCurrentUser().google.image.url}}" style="height: 26px;width: 25px;margin-top: -3px;">
               <input type="text" placeholder="Write a Comment" style="width: 92%;color: #000000" ng-disabled="true">
-              <span class="glyphicon glyphicon-ok" style="padding:2px;color:#337ab7"></span>
             </div>
           </div>
         </div>
@@ -136,7 +135,7 @@
       <!--Edit box for buzz-->
       <div class="row" style="padding: 0px;" ng-show='showDivObj.showDiv&&showDivObj.showDivId == buzz._id'>
         <div class="col-md-24" style="padding: 0px;padding-top: 10px;">
-          <textarea ng-model="updatePostText" style="width:100%;color:black;">{{buzz.buzzConte </textarea>
+          <textarea ng-model="updatePostText" style="width:100%;color:black;resize: none;">{{buzz.buzzContent}} </textarea>
           <button class="btn btn-primary" ng-click="editBuzz(buzz._id,updatePostText,$index)">Save</button>
           <button class="btn btn-primary" ng-click="showDivObj.showDiv=false">Cancel</button>
         </div>
@@ -207,9 +206,6 @@
                     <input type="text" ng-value="comment.commentText" ng-model="updatedComment"
                            ng-keyup="keyPressEditComment($event.keyCode,buzz._id,comment._id,updatedComment,$index,$parent.$index)"
                            style="width: 89%;color: #000000">
-                    <a href="" ng-click="editComment(buzz._id,comment._id,updatedComment,$index,$parent.$index)">
-                      <span class="glyphicon glyphicon-ok" style="padding:2px;"></span>
-                    </a>
                     <a href="" ng-click="showCommentEdit.showDiv=false">
                       <span class="glyphicon glyphicon-remove" style="padding:2px;"></span>
                     </a>
@@ -223,9 +219,6 @@
                 <input type="text" placeholder="Write a Comment" style="width: 93%;color: #000000"
                        ng-model="commentText"
                        ng-keyup="keyPressCreateComment($event.keyCode,buzz._id,commentText,$index)">
-                <a href="" ng-click="buzzComment(buzz._id,commentText,$index)">
-                  <span class="glyphicon glyphicon-ok" style="padding:2px;"></span>
-                </a>
               </div>
             </div>
           </div>
@@ -299,6 +292,7 @@
 
   </div>
 </div>
+
 
 </div>
 

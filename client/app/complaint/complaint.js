@@ -17,7 +17,25 @@ angular.module('buzzAppApp')
         url: '/complaint',
         templateUrl: 'app/complaint/complaint.html',
         controller: 'ComplaintCtrl'
-      });
+      })
+
+      .state('profile.complaint.fileComplaint', {
+        url: '/fileComplaint',
+        templateUrl: 'app/complaint/fileComplaint/fileComplaint.html',
+        controller: 'FileComplaintCtrl'
+      })
+
+      .state('profile.complaint.user', {
+        url: '/user',
+        templateUrl: 'app/complaint/userComplaint/userComplaint.html',
+        controller: 'UserComplaintCtrl'
+      })
+
+      .state('profile.complaint.admin', {
+        url: '/admin',
+        templateUrl: 'app/complaint/adminComplaint/adminComplaint.html',
+        controller: 'AdminComplaintCtrl'
+      })
 
   }]);
 

@@ -195,9 +195,8 @@ exports.editBuzz = function (id, commentId, updatedBuzz, callback) {
 
     }
 
-    buzz.save(function (err, data) {
+    buzz.save(function (err, buzz) {
       Buzz.findById(buzz._id).populate('postedBy').populate('comments.postedBy').populate('likedBy.postedBy').populate('dislikedBy.postedBy').exec(function (err, buzzPopulated) {
-        console.log(buzzPopulated);
         callback(err, buzzPopulated);
       })
     })

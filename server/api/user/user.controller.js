@@ -8,6 +8,7 @@ var jwt = require('jsonwebtoken');
 /**
  * Get my info
  */
+
 exports.me = function (req, res) {
   var userId = req.user._id;
   UserService.find(userId, function (err, user) {
@@ -16,5 +17,17 @@ exports.me = function (req, res) {
       res.json(user);
     }
   );
+};
+
+/**
+ * Get Users List
+ */
+
+exports.getUsers = function (req, res) {
+  UserService.getUsers(function (err, users) {
+    if (err) return next(err);
+    if (!users) return res.status(401).send("Unauthorized");
+    res.json(users);
+  })
 };
 

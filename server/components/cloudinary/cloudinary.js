@@ -3,7 +3,7 @@
  */
 
 var cloudinary = require('cloudinary');
-var config = require('../../config/environment/development');
+var config = require('../../config/environment');
 
 cloudinary.config(config.cloudinary);
 

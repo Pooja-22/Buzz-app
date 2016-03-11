@@ -20,5 +20,7 @@ module.exports = {
   mailgun: {
     apiKey: 'key-18c0711b269f498bdaee17f9cfe2169f',
     domain: 'sandboxb331511e994e4747bc8c9e3b7c232d57.mailgun.org'
-  }
+  },
+
+  adminUserIds: ['pooja.garg@tothenew.com','prateek@tothenew.com']
 };
