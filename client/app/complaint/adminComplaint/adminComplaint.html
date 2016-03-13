@@ -5,6 +5,24 @@
       <div class="panel-heading" style="background:lightblue;color: #101010">
         <h3 class="panel-title">Complaints</h3>
       </div>
+      Status:
+      <select ng-model="filterStatus" ng-init="filterStatus='All'">
+        <option value="All">All</option>
+        <option value="Open">Open</option>
+        <option value="Re-Open">Re-Open</option>
+        <option value="Closed">closed</option>
+        <option value="Resolved">Resolved</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Cancel">Cancel</option>
+      </select>
+      Department:
+      <select ng-model="filterDepartment" ng-init="filterDepartment='All'">
+        <option value="All">All</option>
+        <option value="IT">IT</option>
+        <option value="Infrastructure">Infrastructure</option>
+        <option value="Other">Other</option>
+      </select>
+
       <table class="table table-hover" id="task-table">
         <thead>
         <tr>
@@ -16,7 +34,7 @@
 
         </tr>
         </thead>
-        <tbody ng-repeat="complaint in complaint">
+        <tbody ng-repeat="complaint in complaint | filterComplaints : filterStatus : filterDepartment">
         <tr>
           <td>{{complaint.department}}</td>
           <td>{{complaint.postedBy.name}}</td>
@@ -68,23 +86,29 @@
         <hr>
         <!--Assign To me button-->
         <button class="btn btn-primary" ng-click="assignToMe(complaintDetails._id,complaintDetails.index)"
-                ng-hide="complaintDetails.status==='In Progress'||complaintDetails.status==='Cancel'||complaintDetails.status==='Closed'">
+                ng-hide="complaintDetails.status==='In Progress'||complaintDetails.status==='Cancel'||complaintDetails.status==='Closed'||complaintDetails.status==='Resolved'"
+                ng-if="complaintDetails.postedBy._id!==getCurrentUser._id"
+                ng-disabled="complaintDetails.assignToMeComplaint">
           AssignTo Me
-          <!--Assign To other Admin-->
-          <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" ng-click="getUsers()">
-              Assign To
-              <span class="caret"></span></button>
-            <ul class="dropdown-menu">
-              <li ng-repeat="admin in admins" ng-hide="admin._id===getCurrentUser._id"><a
-                ng-click="assignToMe(complaintDetails._id,complaintDetails.index,admin._id)">{{admin.name}}</a></li>
-            </ul>
-          </div>
-          <!--Resolved button-->
-          <button class="btn btn-primary" ng-click="resolveComplaint(complaintDetails._id,complaintDetails.index)"
-                  ng-if="complaintDetails.status==='In Progress'">
-            Resolved
-          </button>
+        </button>
+        <!--Assign To other Admin-->
+        <div class="dropdown"
+             ng-hide="complaintDetails.status==='Cancel'||complaintDetails.status==='Closed'||complaintDetails.status==='Resolved'||complaintDetails.status==='In Progress'">
+          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" ng-click="getUsers()"
+                  ng-disabled="complaintDetails.assignToComplaint">
+            Assign To
+            <span class="caret"></span></button>
+          <ul class="dropdown-menu">
+            <li ng-repeat="admin in admins" ng-hide="admin._id===complaintDetails.postedBy._id"><a
+              ng-click="assignTo(complaintDetails._id,complaintDetails.index,admin._id)">{{admin.name}}</a></li>
+          </ul>
+        </div>
+        <!--Resolved button-->
+        <button class="btn btn-primary" ng-click="resolveComplaint(complaintDetails._id,complaintDetails.index)"
+                ng-if="complaintDetails.status==='In Progress'&&complaintDetails.assignedTo._id===getCurrentUser._id"
+          ng-disabled="complaintDetails.resolveDisabled">
+          Resolved
+        </button>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

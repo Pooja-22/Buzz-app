@@ -13,7 +13,8 @@
           <img src="../assets/images/preloader.gif" height="50" width="50">
         </div>
         <!--Textarea for Buzz Text-->
-        <textarea ng-model="postText" placeholder="What's on your mind?" id="postInputText"></textarea>
+        <textarea ng-model="postText" placeholder="What's on your mind?" id="postInputText"
+                  spellcheck="true"></textarea>
         <!--Select tag,Choose File,Buzz Button-->
         <div class="col-md-24" id="submitArea">
           <ul class="list-inline">
@@ -31,7 +32,7 @@
             </li>
 
             <li>
-              <button class='btn btn-primary' ng-click="saveBuzz()" id="buzzBtn" ng-disabled="postText.length === 0">
+              <button class='btn btn-primary'  ng-click="saveBuzz()" id="buzzBtn" ng-disabled="postText.length === 0">
                 Buzz
               </button>
             </li>
@@ -67,7 +68,8 @@
 
     <div class="div_postText">
       <!--show-more defined in buzz.directive-->
-      <span ng-bind-html="postText | linky" style="word-wrap: break-word;"></span>
+      <span ng-bind-html="postText | linky"
+            style="word-wrap: break-word;text-align: justify;text-justify: inter-word"></span>
 
       <br><br>
 
@@ -135,7 +137,8 @@
       <!--Edit box for buzz-->
       <div class="row" style="padding: 0px;" ng-show='showDivObj.showDiv&&showDivObj.showDivId == buzz._id'>
         <div class="col-md-24" style="padding: 0px;padding-top: 10px;">
-          <textarea ng-model="updatePostText" style="width:100%;color:black;resize: none;">{{buzz.buzzContent}} </textarea>
+          <textarea ng-model="updatePostText" ng-init="updatePostText=buzz.buzzContent"
+                    style="width:100%;color:black;resize: none" ;> </textarea>
           <button class="btn btn-primary" ng-click="editBuzz(buzz._id,updatePostText,$index)">Save</button>
           <button class="btn btn-primary" ng-click="showDivObj.showDiv=false">Cancel</button>
         </div>
@@ -144,7 +147,7 @@
       <div class="div_postText" ng-init="content=moreLess(buzz.buzzContent,400)" style="word-wrap: break-word;">
 
         <div>
-          <span ng-bind-html="content.text|linky"></span>
+          <span ng-bind-html="content.text|linky" style="text-align: justify;"></span>
           <a ng-click="(content.text = buzz.buzzContent);(content.isShowMore=false);(content.isShowLess=true)"
              ng-show="content.isShowMore">Show More</a>
           <a ng-click="content=moreLess(buzz.buzzContent,400)" ng-show="content.isShowLess">Show Less </a>
@@ -163,8 +166,7 @@
                   ng-class="{'likeDislikeChangeColor':buzz.like==true}" ng-disabled="buzz.like==true"
                   ng-click="countLike(buzz._id,$index)"></button>
           &nbsp
-          <span style="padding: 2px;cursor: pointer" data-toggle="modal" data-target="#likeModal"
-                ng-click="modalLike($index)" data-target="#dislikeModal">{{buzz.likedBy.length}}</span>
+          <span style="padding: 2px;">{{buzz.likedBy.length}}</span>
           <!--Dislike Button-->
           <button class="glyphicon glyphicon-thumbs-down"
                   style="padding: 2px;border-radius: 50%;color:#337ab7"
@@ -172,16 +174,26 @@
                   ng-click="countDislike(buzz._id,$index)">
           </button>
           &nbsp
-          <span style="padding: 2px;cursor:pointer;" data-toggle="modal" ng-click="modalDislike($index)"
-                data-target="#dislikeModal">{{buzz.dislikedBy.length}}</span>
+          <span style="padding: 2px;">{{buzz.dislikedBy.length}}</span>
           <!--Comment-->
-          <a href="" ng-click="active=!active"><span class="glyphicon glyphicon-comment"
-                                                     style="padding: 2px;"></span></a>&nbsp
+          <a href=""><span class="glyphicon glyphicon-comment"
+                           style="padding: 2px;"></span></a>&nbsp
           <span style="padding: 2px;">{{buzz.comments.length}}</span>
+
+          <span style="padding: 2px;cursor:pointer;" class="glyphicon glyphicon-thumbs-up"
+                data-toggle="modal" data-target="#likeModal"
+                ng-click="modalLike($index)"></span>
+          <span style="padding: 2px;cursor:pointer;" class="glyphicon glyphicon-thumbs-down"
+                data-toggle="modal" ng-click="modalDislike($index)"
+                data-target="#dislikeModal"></span>
           <!--Posted Comments-->
           <div style="margin-top: 5px;padding:5px;">
-            <div>
-              <div ng-repeat="comment in buzz.comments" ng-hide="buzz.comments.length>5" ng-show="active"
+            <div style="overflow-y: scroll;max-height: 400px;overflow-y: auto;">
+              <a href="" ng-show="buzz.comments.length>5&&!active" ng-click="active=true">View
+                {{buzz.comments.length-5}} more Comments</a>
+
+              <div ng-repeat="comment in buzz.comments"
+                   ng-hide="showHideComments(buzz.comments,comment,$index)&&active==false"
                    style="background: #f6f7f8;text-align: justify;position: relative;">
                 <div ng-class="{'changeType':buzz.buzzType=='Lost N Found'}">
                   <p style="padding-bottom: 5px;padding-top: 5px;">
@@ -203,9 +215,9 @@
                        ng-show="showCommentEdit.showDiv&&showCommentEdit.showBuzzId==buzz._id&&showCommentEdit.showCommentId==comment._id">
                     <img src="{{getCurrentUser().google.image.url}}"
                          style="height: 26px;width: 25px;margin-top: -3px;">
-                    <input type="text" ng-value="comment.commentText" ng-model="updatedComment"
-                           ng-keyup="keyPressEditComment($event.keyCode,buzz._id,comment._id,updatedComment,$index,$parent.$index)"
-                           style="width: 89%;color: #000000">
+                    <textarea ng-init="updatedComment=comment.commentText" ng-model="updatedComment"
+                              ng-keyup="keyPressEditComment($event.keyCode,buzz._id,comment._id,updatedComment,$index,$parent.$index)"
+                              style="width: 89%;color: #000000"></textarea>
                     <a href="" ng-click="showCommentEdit.showDiv=false">
                       <span class="glyphicon glyphicon-remove" style="padding:2px;"></span>
                     </a>
@@ -218,7 +230,7 @@
                 <img src="{{getCurrentUser().google.image.url}}" style="height: 26px;width: 25px;margin-top: -3px;">
                 <input type="text" placeholder="Write a Comment" style="width: 93%;color: #000000"
                        ng-model="commentText"
-                       ng-keyup="keyPressCreateComment($event.keyCode,buzz._id,commentText,$index)">
+                       ng-keyup="keyPressCreateComment($event.keyCode,buzz._id,commentText,$index,commentText)">
               </div>
             </div>
           </div>
@@ -295,7 +307,3 @@
 
 
 </div>
-
-
-
-

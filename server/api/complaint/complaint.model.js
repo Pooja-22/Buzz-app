@@ -23,7 +23,16 @@ var ComplainSchema = new Schema({
   image: {
     path: {type: String}
   },
-  createdOn: {type: Date, default: Date.now()}
+  createdOn: {type: Date, default: Date.now()},
+  complaintLog: [{
+    status: {type: String, default: 'Open'},
+    changedAt: {type: Date},
+    assignedTo: {
+      type: mongoose.Schema.Types.ObjectId, //Admin
+      ref: 'User'
+    }
+  }]
+
 
 });
 

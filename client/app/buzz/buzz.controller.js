@@ -46,6 +46,8 @@ angular.module('buzzAppApp')
     $scope.like = false;
     $scope.dislike = false;
     $scope.imageSrc = '';
+    $scope.active = false;
+    $scope.validate = false;
 
     /**
      * modify to form data
@@ -71,7 +73,7 @@ angular.module('buzzAppApp')
         buzzType: $scope.buzzType
       };
       if ($scope.file) {
-        $scope.BuzzData.file = $scope.file
+        $scope.BuzzData.file = $scope.file;
       }
       var buzzData = modifyToFormData($scope.BuzzData);
       buzzService.saveBuzzData(buzzData, function (data) {
@@ -279,7 +281,7 @@ angular.module('buzzAppApp')
         page++;
         $scope.getBuzz();
       }
-    })
+    });
 
     /**
      * Save comment on Enter
@@ -289,9 +291,12 @@ angular.module('buzzAppApp')
      * @param index
      */
 
-    $scope.keyPressCreateComment = function (e, id, commentText, index) {
-      if (e == 13) {
-        $scope.buzzComment(id, commentText, index);
+    $scope.keyPressCreateComment = function (e, id, commentText, index, value) {
+      if (value&&e==13){
+          $scope.buzzComment(id, commentText, index);
+        }
+      else if(e==13) {
+        $scope.alert = true;
       }
     };
 
@@ -306,7 +311,7 @@ angular.module('buzzAppApp')
      */
 
     $scope.keyPressEditComment = function (e, buzzId, commentId, updatedValue, index, buzzIndex) {
-      if (e == 13) {
+      if (updatedValue && e == 13) {
         $scope.editComment(buzzId, commentId, updatedValue, index, buzzIndex);
       }
     };
@@ -326,7 +331,7 @@ angular.module('buzzAppApp')
      *populate data in Dislike Modal
      */
 
-    $scope.modalDislike = function(index){
+    $scope.modalDislike = function (index) {
       $scope.dislikeUsers = $scope.Buzz[index].dislikedBy;
     };
 
@@ -335,8 +340,19 @@ angular.module('buzzAppApp')
      * @param index
      */
 
-    $scope.modalLike = function(index){
+    $scope.modalLike = function (index) {
       $scope.likeUsers = $scope.Buzz[index].likedBy;
+    };
+
+    /**
+     *Show and hide comments
+     */
+
+    $scope.showHideComments = function (commentData, data, index) {
+      if (commentData.length > 5 && index < commentData.length - 5) {
+        $scope.active = false;
+        return true;
+      }
     }
 
 

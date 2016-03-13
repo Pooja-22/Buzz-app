@@ -38,11 +38,16 @@ angular.module('buzzAppApp')
      * Assign complaint
      */
 
-    $scope.assignToMe = function (id, index, userId) {
+    $scope.assignToMe = function (id, index) {
       $scope.assignLoader = true;
       $scope.updatedComplaint.status = 'In Progress';
-      $scope.updatedComplaint.id = userId;
+      $scope.updatedComplaint.log = {
+        status:'In Progress',
+        changedAt :Date.now(),
+        assignedTo :$scope.getCurrentUser._id
+      };
       complaintService.update({complaintId: id}, $scope.updatedComplaint, function (data) {
+        $scope.complaintDetails.assignToMeComplaint = true;
         $scope.complaint[index] = data;
         $scope.assignLoader = false;
         $scope.assignBtn = true;
@@ -53,9 +58,15 @@ angular.module('buzzAppApp')
      * Assign complaint to other Admin
      */
 
-    $scope.assignTo = function () {
+    $scope.assignTo = function (id,index,assignedToId) {
       $scope.updatedComplaint.status = 'In Progress';
+      $scope.updatedComplaint.log = {
+        status:'In Progress',
+        changedAt :Date.now(),
+        assignedTo :assignedToId
+      };
       complaintService.update({complaintId: id}, $scope.updatedComplaint, function (data) {
+        $scope.complaintDetails.assignToComplaint = true;
         $scope.complaint[index] = data;
       });
     };
@@ -64,10 +75,16 @@ angular.module('buzzAppApp')
      * Resolve complaint
      */
 
-    $scope.resolveComplaint = function (id,index) {
+    $scope.resolveComplaint = function (id, index) {
       $scope.updatedComplaint.status = 'Resolved';
+      $scope.updatedComplaint.log = {
+        status:'Resolved',
+        changedAt :Date.now(),
+        assignedTo :$scope.getCurrentUser._id
+      };
       console.log($scope.updatedComplaint);
       complaintService.update({complaintId: id}, $scope.updatedComplaint, function (data) {
+        $scope.complaintDetails.resolveDisabled = true;
         $scope.complaint[index] = data;
       });
     };

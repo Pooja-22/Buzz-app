@@ -13,8 +13,8 @@ var ComplaintService = require('./complaint.service');
  */
 
 exports.findComplaint = function (req, res) {
-  var id = req.query.userId;
-  ComplaintService.findComplaint(id, function (err, complaint) {
+  var userId = req.query.userId;
+  ComplaintService.findComplaint(userId, function (err, complaint) {
     if (err) {
       return HandleError(res, err);
     }
@@ -42,7 +42,6 @@ exports.createComplaint = function (req, res) {
   })
 };
 
-
 /**
  *Edit complaint only by creator
  * @param req
@@ -51,9 +50,7 @@ exports.createComplaint = function (req, res) {
 
 exports.editComplaint = function (req, res) {
   var id = req.params.id;
-  var userId = req.user._id;
-  console.log(req.body)
-  ComplaintService.editComplaint(id, userId, req.body, function (err, complaint) {
+  ComplaintService.editComplaint(id, req.body, function (err, complaint) {
       if (err) {
         return HandleError(res, err);
       }

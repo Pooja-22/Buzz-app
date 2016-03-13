@@ -5,6 +5,23 @@
       <div class="panel-heading" style="background:lightblue;color: #101010">
         <h3 class="panel-title">Complaints</h3>
       </div>
+      Status:
+      <select ng-model="filterStatus" ng-init="filterStatus='All'">
+        <option value="All">All</option>
+        <option value="Open">Open</option>
+        <option value="Re-Open">Re-Open</option>
+        <option value="Closed">closed</option>
+        <option value="Resolved">Resolved</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Cancel">Cancel</option>
+      </select>
+      Department:
+      <select ng-model="filterDepartment" ng-init="filterDepartment='All'">
+        <option value="All">All</option>
+        <option value="IT">IT</option>
+        <option value="Infrastructure">Infrastructure</option>
+        <option value="Other">Other</option>
+      </select>
       <table class="table table-hover" id="task-table">
         <thead>
         <tr>
@@ -14,7 +31,7 @@
           <th>Status</th>
         </tr>
         </thead>
-        <tbody ng-repeat="complaint in complaint">
+        <tbody ng-repeat="complaint in complaint | filterComplaints : filterStatus : filterDepartment">
         <tr>
           <td>{{complaint.department}}</td>
           <td>{{complaint._id}}</td>
@@ -56,21 +73,23 @@
           </p>
 
           <div style="position: absolute;right:20px;">
-            {{(complaintDetails.status!=='In Progress'||complaintDetails.status!=='Open')}}
             <!--Cancel button-->
             <button class="btn btn-primary"
-                    ng-if="complaintDetails.status==='In Progress'||complaintDetails.status==='Open' "
+                    ng-if="complaintDetails.status==='In Progress'||complaintDetails.status==='Open'||complaintDetails.status==='Re-Open' "
                     ng-click="cancelComplaint(complaintDetails._id,complaintDetails.index)"
                     ng-disabled="complaintDetails.cancelDisabled">
               Cancel
             </button>
             <!--Closed button-->
             <button class="btn btn-primary" ng-if="complaintDetails.status==='Resolved'"
-                    ng-click="closeComplaint(complaintDetails._id,complaintDetails.index) ">Closed
+                    ng-click="closeComplaint(complaintDetails._id,complaintDetails.index) "
+                    ng-disabled="complaintDetails.closeDisabled">Closed
             </button>
             <!--Re open button-->
-            <button class="btn btn-primary" ng-if="complaintDetails.status==='Resolved'"
-                    ng-click="reOpenComplaint(complaintDetails._id,complaintDetails.index) ">Re-Open
+            <button class="btn btn-primary"
+                    ng-if="complaintDetails.status==='Resolved'||complaintDetails.status==='Closed'"
+                    ng-click="reOpenComplaint(complaintDetails._id,complaintDetails.index)"
+                    ng-disabled="complaintDetails.resolveDisabled">Re-Open
             </button>
           </div>
         </div>

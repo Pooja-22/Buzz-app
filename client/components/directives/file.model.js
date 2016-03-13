@@ -24,6 +24,14 @@ angular.module('buzzAppApp')
             scope.getFile();
           });
         });
+
+        element.bind('click', function () {
+          scope.$apply(function () {
+            modelSetter(scope, element[0].files[0]);
+            scope.getFile();
+          });
+        });
+
       }
     };
   }]);

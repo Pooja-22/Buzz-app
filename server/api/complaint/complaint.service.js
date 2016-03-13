@@ -70,17 +70,19 @@ exports.createComplaint = function (id, data, fileDetail, callback) {
  * @param callback
  */
 
-exports.editComplaint = function (complaintId, userId, data, callback) {
-  if(data.id){
-    userId = data.id;
-  }
+exports.editComplaint = function (complaintId, data, callback) {
   Complaint.findById(complaintId, function (err, complaint) {
     if (err) {
       callback(err);
     }
     else {
       complaint.status = data.status;
-      complaint.assignedTo = userId;
+      complaint.assignedTo = data.log.assignedTo;
+      complaint.complaintLog.push({
+        status: data.log.status,
+        changedAt: data.log.changedAt,
+        assignedTo: data.log.assignedTo
+      });
       complaint.save(function (err, complaint) {
         Complaint.findById(complaint._id).populate('assignedTo').populate('postedBy').exec(function (err, complaintPopulated) {
           callback(err, complaintPopulated);

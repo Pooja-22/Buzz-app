@@ -3,6 +3,8 @@
   width: 100%;
   text-align: inherit;
   resize: none;
+  white-space: pre-wrap;
+
 }
 
 #buzzButton {
@@ -158,4 +160,5 @@ select {
   max-height: 500px;
   overflow-y: auto;
 }
+
 
